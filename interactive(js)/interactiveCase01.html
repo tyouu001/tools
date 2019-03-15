@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>鼠标滑过侧边弹出内容</title>
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+    }
+    #contain {
+        width: 200px;
+        height: 200px;
+        background: pink;
+        position: relative;
+        left: -200px;
+        top: 0;
+    }
+    #share {
+        width: 25px;
+        height: 50px;
+        background: lightgreen;
+        position: absolute;
+        left: 200px;
+        top: 75px;
+        text-align: center;
+        line-height: 25px;
+    }
+    </style>
+</head>
+
+<body>
+    <div id="contain">
+        <span id="share">分享</span>
+    </div>
+
+    <script>
+    window.onload = function (){
+        oDiv = document.getElementById('contain');
+        oDiv.onmouseover = function (){
+            startMove(0);
+        }
+        oDiv.onmouseout = function (){
+            startMove(-200);
+        }
+    }
+    
+    var timer = null;
+
+    //一、变速运动（先快后慢）
+    function startMove(iTarget){//iTarget为offsetLeft目标值
+        //开始前清除所有定时器
+        clearInterval(timer);
+        var oDiv = document.getElementById('contain');
+        timer = setInterval(function(){
+            //设置速度（分母越小速度越快）
+            var speed = (iTarget - oDiv.offsetLeft) / 8;
+            //如果不取整最后会出现小数，会不能完全到达目标值
+            //正-->向上取整，负-->向下取整（未到达目标时speed不能为0）
+            speed = speed < 0 ? Math.floor(speed) : Math.ceil(speed);
+            if (oDiv.offsetLeft == iTarget) {
+                //到达目标值清除定时器
+                clearInterval(timer);
+            }else {
+                //现在的位置加上改变的距离
+                oDiv.style.left = oDiv.offsetLeft + speed + 'px';
+            }
+        },30);
+    }
+    
+    // 二、匀速运动
+    function startMove(iTarget){//iTarget为offsetLeft目标值
+        //开始前清除所有定时器
+        clearInterval(timer);
+        var oDiv = document.getElementById('contain');
+        timer = setInterval(function(){
+            var speed = 0;
+            //判断运动方向和speed正负
+            if (oDiv.offsetLeft < iTarget) {
+                speed = 10;
+            }else {
+                speed = -10;
+            }
+            if (oDiv.offsetLeft == iTarget) {
+                //到达目标值清除定时器
+                clearInterval(timer);
+            }else {
+                //现在的位置加上改变的距离
+                oDiv.style.left = oDiv.offsetLeft + speed + 'px';
+            }
+        },30);
+    }
+
+    </script>
+</body>
+</html>
